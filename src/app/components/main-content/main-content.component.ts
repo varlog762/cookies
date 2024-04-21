@@ -5,8 +5,10 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './main-content.component.html',
-  styleUrl: './main-content.component.scss'
+  styleUrl: './main-content.component.scss',
 })
 export class MainContentComponent {
-
+  scrollTo(target: HTMLElement): void {
+    target.scrollIntoView({ behavior: 'smooth' });
+  }
 }
