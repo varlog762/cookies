@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 import { ProductInterface } from '../../models/product.interface';
 import { FetchDataService } from '../../services/fetch-data.service';
@@ -16,7 +17,7 @@ import { FetchDataService } from '../../services/fetch-data.service';
   templateUrl: './content.component.html',
   styleUrl: './content.component.scss',
 })
-export class ContentComponent implements OnInit {
+export class ContentComponent implements OnInit, OnDestroy {
   public form!: FormGroup;
   public currency = '$';
   public productsData: ProductInterface[] = [
@@ -117,6 +118,7 @@ export class ContentComponent implements OnInit {
       weight: '4 шт./ 400 гр.',
     },
   ];
+  public sendOrderSubscription$!: Subscription;
 
   constructor(
     private fb: FormBuilder,
@@ -176,11 +178,21 @@ export class ContentComponent implements OnInit {
 
   confirmOrder(): void {
     if (this.form.valid) {
-      this.fetchDataService.sendOrder(
-        'https://testologia.ru/cookies-order',
-        this.form.value
-      );
-      this.form.reset();
+      this.sendOrderSubscription$ = this.fetchDataService
+        .sendOrder('https://testologia.ru/cookies-order', this.form.value)
+        .subscribe({
+          next: (response: any) => {
+            alert(response.message);
+            this.form.reset();
+          },
+          error: (response: any) => {
+            alert(response.error.message);
+          },
+        });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.sendOrderSubscription$.unsubscribe();
   }
 }
