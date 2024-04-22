@@ -131,8 +131,13 @@ export class ContentComponent implements OnInit {
     });
   }
 
-  scrollTo(target: HTMLElement): void {
+  scrollTo(target: HTMLElement, product?: any): void {
     target.scrollIntoView({ behavior: 'smooth' });
+    if (product) {
+      this.form.patchValue({
+        product: `${product.title} (${product.price} ${this.currency})`,
+      });
+    }
   }
 
   changeCurrency(): void {

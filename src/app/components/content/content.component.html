@@ -77,7 +77,9 @@
                 </div>
                 <div class="products-item-weight">{{ product.weight }}</div>
               </div>
-              <button class="button violet-button" (click)="scrollTo(order)">
+              <button
+                class="button violet-button"
+                (click)="scrollTo(order, product)">
                 Заказать
               </button>
             </div>
@@ -138,7 +140,8 @@
                 error:
                   form.get('product')?.invalid &&
                   (form.get('product')?.dirty || form.get('product')?.touched)
-              }" />
+              }"
+              readonly />
             <input
               type="text"
               placeholder="Ваше имя"
