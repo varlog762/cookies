@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 
 import { ProductInterface } from '../../models/product.interface';
+import { FetchDataService } from '../../services/fetch-data.service';
 
 @Component({
   selector: 'app-content',
@@ -117,7 +118,10 @@ export class ContentComponent implements OnInit {
     },
   ];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private fetchDataService: FetchDataService
+  ) {}
 
   ngOnInit(): void {
     this.initializeForm();
@@ -131,7 +135,7 @@ export class ContentComponent implements OnInit {
     });
   }
 
-  scrollTo(target: HTMLElement, product?: any): void {
+  scrollTo(target: HTMLElement, product?: ProductInterface): void {
     target.scrollIntoView({ behavior: 'smooth' });
     if (product) {
       this.form.patchValue({
@@ -172,7 +176,10 @@ export class ContentComponent implements OnInit {
 
   confirmOrder(): void {
     if (this.form.valid) {
-      alert('Спасибо за заказ, мы скоро свяжемся с вами!');
+      this.fetchDataService.sendOrder(
+        'https://testologia.ru/cookies-order',
+        this.form.value
+      );
       this.form.reset();
     }
   }
