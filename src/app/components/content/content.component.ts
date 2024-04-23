@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs/internal/Subscription';
 
 import { ProductInterface } from '../../models/product.interface';
 import { FetchDataService } from '../../services/fetch-data.service';
+import { OrderResponseInterface } from '../../models/order-response.interface';
 
 @Component({
   selector: 'app-content',
@@ -180,14 +181,9 @@ export class ContentComponent implements OnInit, OnDestroy {
     if (this.form.valid) {
       this.sendOrderSubscription$ = this.fetchDataService
         .sendOrder('https://testologia.ru/cookies-order', this.form.value)
-        .subscribe({
-          next: (response: any) => {
-            alert(response.message);
-            this.form.reset();
-          },
-          error: (response: any) => {
-            alert(response.error.message);
-          },
+        .subscribe((response: OrderResponseInterface) => {
+          alert(response.message);
+          this.form.reset();
         });
     }
   }

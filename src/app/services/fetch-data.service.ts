@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/internal/Observable';
 
-import { OrderFormRequestInterface } from '../models/order-form-request.interface';
+import { OrderRequestInterface } from '../models/order-request.interface';
+import { OrderResponseInterface } from '../models/order-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +11,10 @@ import { OrderFormRequestInterface } from '../models/order-form-request.interfac
 export class FetchDataService {
   constructor(private http: HttpClient) {}
 
-  sendOrder(url: string, formValue: OrderFormRequestInterface) {
-    return this.http.post(url, formValue);
+  sendOrder(
+    url: string,
+    formValue: OrderRequestInterface
+  ): Observable<OrderResponseInterface> {
+    return this.http.post<OrderResponseInterface>(url, formValue);
   }
 }
