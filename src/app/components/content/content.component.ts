@@ -102,5 +102,6 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sendOrderSubscription$.unsubscribe();
+    this.productsDataSubscription$.unsubscribe();
   }
 }
