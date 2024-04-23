@@ -13,6 +13,7 @@ import { ProductInterface } from '../../models/product.interface';
 import { FetchDataService } from '../../services/fetch-data.service';
 import { OrderResponseInterface } from '../../models/order-response.interface';
 import { ProductsActions } from '../../store/actions/products.actions';
+import { productsFeature } from '../../store/features/products.feature';
 
 @Component({
   selector: 'app-content',
@@ -36,7 +37,7 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initializeForm();
-    // this.getProducts();
+    this.initializeValues();
 
     this.store.dispatch(ProductsActions.loadProducts());
   }
@@ -49,7 +50,11 @@ export class ContentComponent implements OnInit, OnDestroy {
     });
   }
 
-  initializeValues(): void {}
+  initializeValues(): void {
+    this.productsDataSubscription$ = this.store
+      .select(productsFeature.selectProducts)
+      .subscribe(response => (this.productsData = response));
+  }
 
   scrollTo(target: HTMLElement, product?: ProductInterface): void {
     target.scrollIntoView({ behavior: 'smooth' });
@@ -88,12 +93,6 @@ export class ContentComponent implements OnInit, OnDestroy {
     this.productsData.forEach((item: ProductInterface) => {
       item.price = +(item.basePrice * coefficient).toFixed(1);
     });
-  }
-
-  getProducts(): void {
-    this.productsDataSubscription$ = this.fetchDataService
-      .getProducts('https://testologia.ru/cookies')
-      .subscribe(response => (this.productsData = response));
   }
 
   confirmOrder(): void {

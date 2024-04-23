@@ -7,6 +7,7 @@ import { EMPTY } from 'rxjs/internal/observable/empty';
 
 import { ProductsActions } from '../actions/products.actions';
 import { FetchDataService } from '../../services/fetch-data.service';
+import { ProductInterface } from '../../models/product.interface';
 
 @Injectable()
 export class ProductsEffects {
@@ -17,7 +18,9 @@ export class ProductsEffects {
         return this.fetchDataService
           .getProducts('https://testologia.ru/cookies')
           .pipe(
-            map(products => ProductsActions.loadProductsSuccess({ products }))
+            map((products: ProductInterface[]) =>
+              ProductsActions.loadProductsSuccess({ products })
+            )
           );
       }),
       catchError(() => EMPTY)
