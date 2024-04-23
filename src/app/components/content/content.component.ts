@@ -6,11 +6,13 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { AsyncPipe } from '@angular/common';
+import { Store } from '@ngrx/store';
 
 import { ProductInterface } from '../../models/product.interface';
 import { FetchDataService } from '../../services/fetch-data.service';
 import { OrderResponseInterface } from '../../models/order-response.interface';
-import { AsyncPipe } from '@angular/common';
+import { ProductsActions } from '../../store/actions/products.actions';
 
 @Component({
   selector: 'app-content',
@@ -28,12 +30,15 @@ export class ContentComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private fetchDataService: FetchDataService
+    private fetchDataService: FetchDataService,
+    private readonly store: Store
   ) {}
 
   ngOnInit(): void {
     this.initializeForm();
-    this.getProducts();
+    // this.getProducts();
+
+    this.store.dispatch(ProductsActions.loadProducts());
   }
 
   initializeForm(): void {
@@ -43,6 +48,8 @@ export class ContentComponent implements OnInit, OnDestroy {
       phone: ['', Validators.required],
     });
   }
+
+  initializeValues(): void {}
 
   scrollTo(target: HTMLElement, product?: ProductInterface): void {
     target.scrollIntoView({ behavior: 'smooth' });
